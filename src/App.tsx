@@ -4,6 +4,7 @@ import { Datum, RootObject } from "./types";
 import { API } from "./constant";
 import "./App.css";
 import CoinTable from "./components/CoinTable";
+import Loading from "./components/Loading";
 
 const App = () => {
   const [coins, setCoins] = useState<Array<Datum>>([]);
@@ -21,7 +22,7 @@ const App = () => {
     } catch (error) {
       console.log("Error: ", error);
     } finally {
-      setLoading(true);
+      setLoading(false);
     }
   };
 
@@ -40,7 +41,7 @@ const App = () => {
         />
       </label>
       <input type="button" value="Get coins" onClick={handleClick} />
-      <CoinTable coins={coins} />
+      {loading ? <Loading /> : <CoinTable coins={coins} />}
     </>
   );
 };

@@ -2,70 +2,45 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Datum, RootObject } from "./types";
 import { API } from "./constant";
-
 import "./App.css";
+import CoinTable from "./components/CoinTable";
 
 const App = () => {
   const [coins, setCoins] = useState<Array<Datum>>([]);
+  const [limit, setLimit] = useState(1000);
+  const [loading, setLoading] = useState(false);
 
   const getCoins = async () => {
+    setLoading(true);
     try {
       const { data } = await axios.get<RootObject>(
         `https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?${API.KEY}=${API.VALUE}`,
-        { params: { limit: 1000 } }
+        { params: { limit: limit ? limit : 1000 } }
       );
       setCoins(data.data);
-      console.log("DATA: ", data.data);
     } catch (error) {
       console.log("Error: ", error);
+    } finally {
+      setLoading(true);
     }
   };
 
-  useEffect(() => {
+  const handleClick = () => {
     getCoins();
-  }, []);
-
-  const getPercentage = (
-    circulatingSupply: number,
-    totalSupply: number
-  ): string => {
-    if (circulatingSupply && totalSupply) {
-      return "Hesaplandi";
-    }
-    return "No Data";
   };
 
   return (
     <>
-      <h1>Highly Circulating Cryptocurrencies</h1>
-      <table>
-        <tr>
-          <th>Coin</th>
-          <th>Symbol</th>
-          <th>Circulation Percentage</th>
-          <th>Circulating Supply</th>
-          <th>Total Supply</th>
-          <th>Max Supply</th>
-        </tr>
-        {coins
-          ? coins.map((coin, index) => (
-              <tr key={index}>
-                <td>{coin.name}</td>
-                <td>{coin.symbol}</td>
-                <td>
-                  {coin.total_supply
-                    ? `%${Math.round(
-                        (coin.circulating_supply / coin.total_supply) * 100
-                      )}`
-                    : "No data"}
-                </td>
-                <td>{coin.circulating_supply}</td>
-                <td>{coin.total_supply}</td>
-                <td>{coin.max_supply || "No data"}</td>
-              </tr>
-            ))
-          : null}
-      </table>
+      <label>
+        Enter the number of records you want to list:
+        <input
+          type="text"
+          placeholder="Default is 1000"
+          onChange={(e) => setLimit(Number(e.target.value))}
+        />
+      </label>
+      <input type="button" value="Get coins" onClick={handleClick} />
+      <CoinTable coins={coins} />
     </>
   );
 };

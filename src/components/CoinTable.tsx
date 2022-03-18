@@ -8,6 +8,7 @@ interface ICoinTableProps {
 }
 
 const CoinTable: FC<ICoinTableProps> = ({ coins }) => {
+  console.log("coins:", JSON.stringify(coins));
   return (
     <>
       <h1>Highly Circulating Cryptocurrencies</h1>

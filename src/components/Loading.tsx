@@ -1,7 +1,14 @@
 import { FC } from "react";
 
-const Loading = () => {
-  return <h2> Loading. . . </h2>;
+interface IProps {
+  loading: boolean;
+}
+
+const Loading: FC<IProps> = ({ loading, children }) => {
+  if (loading) return <h2>Loading . . .</h2>;
+  else {
+    return <>{children}</>;
+  }
 };
 
 export default Loading;

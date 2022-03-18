@@ -41,7 +41,9 @@ const App = () => {
         />
       </label>
       <input type="button" value="Get coins" onClick={handleClick} />
-      {loading ? <Loading /> : <CoinTable coins={coins} />}
+      <Loading loading={loading}>
+        <CoinTable coins={coins} />
+      </Loading>
     </>
   );
 };
